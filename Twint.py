@@ -63,7 +63,7 @@ def get_replies(cursor):
     cursor.execute("SELECT  replies, tweet FROM tweets  order by replies desc limit 5")
     replies = []
     for row in cursor.fetchall():
-        replies.append({"replies": row[0], "tweet": row[1]})
+        replies.append({"count": row[0], "tweet": row[1]})
 
     return replies
 
@@ -71,20 +71,20 @@ def get_retweets(cursor):
     cursor.execute("SELECT  retweets, tweet FROM tweets  order by retweets desc limit 5")
     retweets = []
     for row in cursor.fetchall():
-        retweets.append({"retweets": row[0], "tweet": row[1]})
+        retweets.append({"count": row[0], "tweet": row[1]})
     return retweets
 
 @app.route('/')
 def get_twitter_data():
     username = os.getenv("TWITTER_NAME")
 
-   # p = Process(target=get_all_tweets, args=(username,))
-   # p.start()
-  #  p.join()
+    p = Process(target=get_all_tweets, args=(username,))
+    p.start()
+    p.join()
 
-   # p2 = Process(target=get_followers, args=(username,))
-   # p2.start()
-   # p2.join()
+    p2 = Process(target=get_followers, args=(username,))
+    p2.start()
+    p2.join()
 
     conn = sqlite3.connect('twitter.db')
     c = conn.cursor()
@@ -105,7 +105,8 @@ def get_twitter_data():
     return json.dumps(resp)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True, port=80, host='0.0.0.0')
+
 
 
 
