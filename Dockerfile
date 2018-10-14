@@ -1,15 +1,11 @@
-FROM python:3.6.5-alpine3.7
+FROM python:3.6
 
-# Update the apt-get list
-RUN apt-get update -y
-
-# Install python dependencies
-RUN apt-get install -y python-pip python-dev build-essential
-
-# Install curl for installing nodejs
-RUN apt-get install -y curl
-
+RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
-COPY requirements.txt ./
+
+COPY requirements.txt /usr/src/app/
 RUN pip install --no-cache-dir -r requirements.txt
-COPY . .
+
+COPY . /usr/src/app
+
+CMD ["python", "Twint.py"] 
